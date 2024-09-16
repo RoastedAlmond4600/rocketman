@@ -14,6 +14,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                        )
 {
     castParameter(apvts, ParameterID::oscPos, oscPosParam);
+
+    apvts.state.addListener(this);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -135,8 +137,16 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
+    bool expected = true;
+    if ( isNonRealtime() || parameterChanged.compare_exchange_strong(expected, false)) {
+        update();
+    }
     splitBufferEvents(buffer, midiMessages);
 
+}
+
+void AudioPluginAudioProcessor::update() {
+    synth.osc1Index = oscPosParam->get();
 }
 
 void AudioPluginAudioProcessor::splitBufferEvents(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiBuffer) {

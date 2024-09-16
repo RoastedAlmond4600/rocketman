@@ -1,18 +1,19 @@
 #pragma once
 #include <math.h>
+#include "WaveBase.h"
 const float TWO_PI = 6.283185307f;
 //a direct form digital resonator implementation of a sin wave (subject to change. Maybe not.)
-class DFDROscillator {
+class DFDROscillator : public WaveBase {
     public:
         float phase;
         float inc;
         float amplitude;
-        void reset() {
+        void reset() override {
             sin0 = amplitude * std::sin(phase * TWO_PI);
             sin1 = amplitude * std::sin((phase - inc) * TWO_PI);
             dsin = 2.f * std::cos(inc * TWO_PI);
         }
-        float update() {
+        float update() override {
             float sinx = dsin * sin0 - sin1;
             sin1 = sin0;
             sin0 = sinx;

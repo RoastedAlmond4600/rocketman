@@ -1,30 +1,36 @@
 #pragma once
+#define NUMWAVEPOS 2
+#include "oscillators/WaveBase.h"
+#include "oscillators/DFDROscillator.h"
+#include "oscillators/BLSawOscillator.h"
 class Oscillator {
     public:
-        //An array of reset function pointers
-        //an Array of update function pointers
         float amplitude;
         float inc;
         float phase;
         float sampleRate;
         float frequency;
         float sampleIndex;
+        int waveIndex;
+        WaveBase* waveArray[NUMWAVEPOS] = {&sineWave, &sawWave};
         void reset() {
-            frequency = 0.f;
-            amplitude = 0.5f;
-            sampleRate = 44100.f;
-            sin0 = amplitude * std::sin(phase * TWO_PI);
-            sin1 = amplitude * std::sin((phase - inc) * TWO_PI);
-            dsin = 2.f * std::cos(inc * TWO_PI);
+            //Initialise DFDR
+            sineWave.amplitude = amplitude;
+            sineWave.inc = inc;
+            //Initialise BLSaw
+            sawWave.amplitude = amplitude;
+            sawWave.inc = inc;
+            sawWave.frequency = frequency;
+            sawWave.sampleRate = sampleRate;
+            //Reset each waveform
+            for (unsigned int i = 0; i < NUMWAVEPOS; ++i) {
+                waveArray[i]->reset();
+            }
         }
         float update() {
-            float sinx = dsin * sin0 - sin1;
-            sin1 = sin0;
-            sin0 = sinx;
-           return sinx * amplitude; 
+           return waveArray[waveIndex]->update(); 
         }
     private:
-        float sin0;
-        float sin1;
-        float dsin;
+        DFDROscillator sineWave;
+        BLSawOscillator sawWave;
 };

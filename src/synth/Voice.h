@@ -4,15 +4,12 @@
 #include "Oscillator.h"
 struct Voice {
     int note;
-    int oscIndex;
     Oscillator osc;
-    DFDROscillator dfosc;
-    BLSawOscillator sawOsc;
     void reset() {
         note = 0;
-        sawOsc.reset(); 
+        osc.reset();
     }
     float renderOsc() {
-        return sawOsc.update(); 
+        return osc.update();
     }
 };

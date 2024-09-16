@@ -1,16 +1,16 @@
 #pragma once
-
-class BLSawOscillator {
+#include "WaveBase.h"
+class BLSawOscillator : public WaveBase {
     public:
         float frequency;
         float sampleRate;
         float inc;
         float phaseBL;
         float amplitude;
-        void reset() {
+        void reset() override {
            phaseBL = -0.5f; 
         }
-        float update() {
+        float update() override {
             phaseBL += inc; 
             if (phaseBL >= 1.f) {
                 phaseBL -= 1.f;

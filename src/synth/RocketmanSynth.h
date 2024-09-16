@@ -34,7 +34,10 @@ public:
     float envDecay;
     float envSustain;
     float envRelease;
-    
+    int osc1Index;
+    int osc2Index;
+    int osc3Index;
+
 private:
     double sampleRate;
     int samplesPerBlock;
