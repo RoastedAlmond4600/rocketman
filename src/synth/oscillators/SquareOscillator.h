@@ -1,13 +1,13 @@
 #pragma once
 #include "WaveBase.h"
-class BLSawOscillator : public WaveBase {
+class SquareOscillator : public WaveBase {
     public:
         float frequency;
         float sampleRate;
         float inc;
         float phaseBL;
         float amplitude;
-        float m;
+        float m; 
         float nyquist;
         void reset() override {
            phaseBL = -0.5f; 
@@ -24,7 +24,7 @@ class BLSawOscillator : public WaveBase {
             float h = frequency;
             while (h < nyquist) {
                 output += m * std::sin(TWO_PI * phaseBL * i) / i;
-                i += 1.f;
+                i += 2.f;
                 m = -m;
                 h += frequency;
             }

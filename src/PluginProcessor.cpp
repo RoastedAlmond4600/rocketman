@@ -13,8 +13,12 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                      #endif
                        )
 {
-    castParameter(apvts, ParameterID::oscPos, oscPosParam);
-
+    castParameter(apvts, ParameterID::osc1Pos, oscPos1Param);
+    castParameter(apvts, ParameterID::osc2Pos, oscPos2Param);
+    castParameter(apvts, ParameterID::osc3Pos, oscPos3Param);
+    castParameter(apvts, ParameterID::osc1Vol, oscVol1Param);
+    castParameter(apvts, ParameterID::osc2Vol, oscVol2Param);
+    castParameter(apvts, ParameterID::osc3Vol, oscVol3Param);
     apvts.state.addListener(this);
 }
 
@@ -146,7 +150,12 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 }
 
 void AudioPluginAudioProcessor::update() {
-    synth.osc1Index = oscPosParam->get();
+    synth.osc1Index = oscPos1Param->get();
+    synth.osc2Index = oscPos2Param->get();
+    synth.osc3Index = oscPos3Param->get();
+    synth.osc1Volume = juce::Decibels::decibelsToGain(oscVol1Param->get());
+    synth.osc2Volume = juce::Decibels::decibelsToGain(oscVol2Param->get());
+    synth.osc3Volume = juce::Decibels::decibelsToGain(oscVol3Param->get());
 }
 
 void AudioPluginAudioProcessor::splitBufferEvents(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiBuffer) {
@@ -189,11 +198,46 @@ void AudioPluginAudioProcessor::render(juce::AudioBuffer<float>& buffer, int sam
 juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameterLayout() {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
     layout.add(std::make_unique<juce::AudioParameterInt>(
-                    ParameterID::oscPos,
-                    "Oscillator Position",
+                    ParameterID::osc1Pos,
+                    "Oscillator 1 Position",
                     0, //min position
-                    4, //max position
+                    3, //max position
                     0
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::osc1Vol,
+                    "Oscillator 1 Volume",
+                    -60.f,
+                    6.f,
+                    0.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterInt>(
+                    ParameterID::osc2Pos,
+                    "Oscillator 2 Position",
+                    0, //min position
+                    3, //max position
+                    0
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::osc2Vol,
+                    "Oscillator 2 Volume",
+                    -60.f,
+                    6.f,
+                    0.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterInt>(
+                    ParameterID::osc3Pos,
+                    "Oscillator 3 Position",
+                    0, //min position
+                    3, //max position
+                    0
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::osc3Vol,
+                    "Oscillator 3 Volume",
+                    -60.f,
+                    6.f,
+                    0.f
                 ));
     return layout;
 }
@@ -206,7 +250,7 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-    //return new AudioPluginAudioProcessorEditor (*this);
+   // return new AudioPluginAudioProcessorEditor (*this);
     return new juce::GenericAudioProcessorEditor(*this);
 }
 

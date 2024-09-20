@@ -7,6 +7,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 {
     juce::ignoreUnused (processorRef);
     setSize (1000, 600);
+    mySlider.setSliderStyle(juce::Slider::SliderStyle::TwoValueVertical);
+    addAndMakeVisible(osc1Component);
+
+    //juce::LookAndFeel::setDefaultLookAndFeel(&rmlnf);
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -16,12 +20,12 @@ AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 //==============================================================================
 void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (juce::Colours::white);
 }
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    auto bounds = getLocalBounds();
+    osc1Component.setBounds(bounds.reduced(100.f));
 }
+

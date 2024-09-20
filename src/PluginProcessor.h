@@ -4,8 +4,16 @@
 #include "synth/RocketmanSynth.h"
 
 namespace ParameterID {
-    #define PARAMETER_ID(str) juce::ParameterID str(#str, 1);
-    PARAMETER_ID(oscPos);
+    #define PARAMETER_ID(str) const juce::ParameterID str(#str, 1);
+    //Oscillator Positions
+    PARAMETER_ID(osc1Pos);
+    PARAMETER_ID(osc2Pos);
+    PARAMETER_ID(osc3Pos);
+    //Oscillator Volumes
+    PARAMETER_ID(osc1Vol);
+    PARAMETER_ID(osc2Vol);
+    PARAMETER_ID(osc3Vol);
+    #undef PARAMETER_ID
 }
 
 //==============================================================================
@@ -59,9 +67,15 @@ private:
     void render(juce::AudioBuffer<float>& buffer, int sampleCount, int bufferOffset);
     void update();
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    std::atomic<bool> parameterChanged { false };
+    std::atomic<bool> parameterChanged { true };
     void valueTreePropertyChanged(juce::ValueTree&, const juce::Identifier&) {
         parameterChanged.store(true);
     }
-    juce::AudioParameterInt* oscPosParam;
+    juce::AudioParameterInt* oscPos1Param;
+    juce::AudioParameterInt* oscPos2Param;
+    juce::AudioParameterInt* oscPos3Param;
+    //Oscilalotor Volume Parameters
+    juce::AudioParameterFloat* oscVol1Param;
+    juce::AudioParameterFloat* oscVol2Param;
+    juce::AudioParameterFloat* oscVol3Param;
 };
