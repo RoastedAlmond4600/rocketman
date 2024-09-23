@@ -43,8 +43,8 @@ void RocketmanSynth::render(float** buffer, int sampleCount) {
                 leftBuffer[sample] = (outputLeft + outputRight) * 0.5f;
             }
         }
-        protectEars(leftBuffer, sampleCount);
-        protectEars(rightBuffer, sampleCount);
+        //protectEars(leftBuffer, sampleCount);
+        //protectEars(rightBuffer, sampleCount);
     }
 }
 

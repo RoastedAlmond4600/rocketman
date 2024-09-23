@@ -55,9 +55,9 @@ private:
         voice.oscArray[0].waveIndex = osc1Index;
         voice.oscArray[1].waveIndex = osc2Index;
         voice.oscArray[2].waveIndex = osc3Index;
-        voice.oscArray[0].amplitude *= osc1Volume;
-        voice.oscArray[1].amplitude *= osc2Volume;
-        voice.oscArray[2].amplitude *= osc3Volume;
+        voice.oscArray[0].amplitude = osc1Volume;
+        voice.oscArray[1].amplitude = osc2Volume;
+        voice.oscArray[2].amplitude = osc3Volume;
     }
 };
 
