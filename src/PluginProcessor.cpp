@@ -13,12 +13,16 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                      #endif
                        )
 {
-    castParameter(apvts, ParameterID::osc1Pos, oscPos1Param);
-    castParameter(apvts, ParameterID::osc2Pos, oscPos2Param);
-    castParameter(apvts, ParameterID::osc3Pos, oscPos3Param);
-    castParameter(apvts, ParameterID::osc1Vol, oscVol1Param);
-    castParameter(apvts, ParameterID::osc2Vol, oscVol2Param);
-    castParameter(apvts, ParameterID::osc3Vol, oscVol3Param);
+    castParameter(apvts, ParameterID::osc1Pos, osc1PosParam);
+    castParameter(apvts, ParameterID::osc2Pos, osc2PosParam);
+    castParameter(apvts, ParameterID::osc3Pos, osc3PosParam);
+    castParameter(apvts, ParameterID::osc1Vol, osc1VolParam);
+    castParameter(apvts, ParameterID::osc2Vol, osc2VolParam);
+    castParameter(apvts, ParameterID::osc3Vol, osc3VolParam);
+    castParameter(apvts, ParameterID::globalTrans, globalTransParam);
+    castParameter(apvts, ParameterID::osc1Trans, osc1TransParam);
+    castParameter(apvts, ParameterID::osc2Trans, osc2TransParam);
+    castParameter(apvts, ParameterID::osc3Trans, osc3TransParam);
     apvts.state.addListener(this);
 }
 
@@ -150,12 +154,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 }
 
 void AudioPluginAudioProcessor::update() {
-    synth.osc1Index = oscPos1Param->get();
-    synth.osc2Index = oscPos2Param->get();
-    synth.osc3Index = oscPos3Param->get();
-    synth.osc1Volume = juce::Decibels::decibelsToGain(oscVol1Param->get());
-    synth.osc2Volume = juce::Decibels::decibelsToGain(oscVol2Param->get());
-    synth.osc3Volume = juce::Decibels::decibelsToGain(oscVol3Param->get());
+    synth.osc1Index = osc1PosParam->get();
+    synth.osc2Index = osc2PosParam->get();
+    synth.osc3Index = osc3PosParam->get();
+    synth.osc1Volume = juce::Decibels::decibelsToGain(osc1VolParam->get());
+    synth.osc2Volume = juce::Decibels::decibelsToGain(osc2VolParam->get());
+    synth.osc3Volume = juce::Decibels::decibelsToGain(osc3VolParam->get());
+    synth.osc1Transpose = osc1TransParam->get();
+    synth.globalTranspose = globalTransParam->get();
+    //std::printf("%.2f\n", synth.osc1Volume);
 }
 
 void AudioPluginAudioProcessor::splitBufferEvents(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiBuffer) {
@@ -197,6 +204,13 @@ void AudioPluginAudioProcessor::render(juce::AudioBuffer<float>& buffer, int sam
 
 juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameterLayout() {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::globalTrans,
+                    "Global Transpose",
+                    -12.f,
+                    12.f,
+                    0.f
+                ));
     layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::osc1Pos,
                     "Oscillator 1 Position",
@@ -207,8 +221,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(
                     ParameterID::osc1Vol,
                     "Oscillator 1 Volume",
-                    -60.f,
+                    -50.f,
                     6.f,
+                    0.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::osc1Trans,
+                    "Oscillator 1 Transpose",
+                    -12.f,
+                    12.f,
                     0.f
                 ));
     layout.add(std::make_unique<juce::AudioParameterInt>(
@@ -221,8 +242,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(
                     ParameterID::osc2Vol,
                     "Oscillator 2 Volume",
-                    -60.f,
+                    -50.f,
                     6.f,
+                    0.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::osc2Trans,
+                    "Oscillator 2 Transpose",
+                    -12.f,
+                    12.f,
                     0.f
                 ));
     layout.add(std::make_unique<juce::AudioParameterInt>(
@@ -235,8 +263,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(
                     ParameterID::osc3Vol,
                     "Oscillator 3 Volume",
-                    -60.f,
+                    -50.f,
                     6.f,
+                    0.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::osc3Trans,
+                    "Oscillator 3 Transpose",
+                    -12.f,
+                    12.f,
                     0.f
                 ));
     return layout;

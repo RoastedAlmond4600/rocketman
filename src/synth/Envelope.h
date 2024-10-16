@@ -6,7 +6,7 @@ public:
         //Cheeky first order lpf.
         level = alpha * (level - target) + target;
         if (target + level >= 3.0f) {
-            multiplier = decayMult;
+            alpha = decayMult;
             target = sustainMult;
         }
         return level;

@@ -5,7 +5,6 @@
 
 class RocketmanSynth {
 public:
-    RocketmanSynth();
     //Overhead
     void allocateResources(double _sampleRate, int samplesPerBlock);
     void deallocateResources();
@@ -13,7 +12,8 @@ public:
     void render(float** buffer, int sampleCount);
     void midiMessage(uint8_t data0, uint8_t data1, uint8_t data2);
 
-
+    //Global Parameters
+    float globalTranspose;
     //Volume Parameters
     float noiseMix;
     float oscMix;
@@ -38,9 +38,12 @@ public:
     int osc1Index;
     int osc2Index;
     int osc3Index;
-    int osc1Volume;
-    int osc2Volume;
-    int osc3Volume;
+    float osc1Volume;
+    float osc2Volume;
+    float osc3Volume;
+    float osc1Transpose;
+    float osc2Transpose;
+    float osc3Transpose;
 
 private:
     double sampleRate;
@@ -55,9 +58,13 @@ private:
         voice.oscArray[0].waveIndex = osc1Index;
         voice.oscArray[1].waveIndex = osc2Index;
         voice.oscArray[2].waveIndex = osc3Index;
-        voice.oscArray[0].amplitude = osc1Volume;
-        voice.oscArray[1].amplitude = osc2Volume;
-        voice.oscArray[2].amplitude = osc3Volume;
+        voice.oscArray[0].amplitude = osc1Volume * 0.707f;
+        voice.oscArray[1].amplitude = osc2Volume * 0.707f;
+        voice.oscArray[2].amplitude = osc3Volume * 0.707f;
+        float globalFactor = std::exp2(globalTranspose / 12.f);
+        voice.oscArray[0].frequency *= globalFactor;
+        voice.oscArray[1].frequency *= globalFactor;
+        voice.oscArray[2].frequency *= globalFactor;
     }
 };
 

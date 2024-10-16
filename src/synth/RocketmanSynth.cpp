@@ -1,8 +1,5 @@
 #include "RocketmanSynth.h"
 #include "../utils/ProtectEars.h"
-RocketmanSynth::RocketmanSynth() {
-    sampleRate = 44100;
-}
 
 void RocketmanSynth::allocateResources(double _sampleRate, int _samplesPerBlock) {
     sampleRate = static_cast<float>(_sampleRate);
@@ -10,7 +7,7 @@ void RocketmanSynth::allocateResources(double _sampleRate, int _samplesPerBlock)
 }
 
 void RocketmanSynth::deallocateResources() {
-
+    reset();
 }
 
 void RocketmanSynth::reset() {
@@ -29,8 +26,6 @@ void RocketmanSynth::render(float** buffer, int sampleCount) {
         //If a voice is active.
         if (voice.note > 0) {
             //If the oscillator value changes, update the oscillator
-            float noiseValue = noiseOsc.update();
-            //maybe need to refactor this, maybe not.
             updateOsc();
             float oscValue = voice.renderOsc();
             outputLeft = oscValue;
@@ -69,7 +64,7 @@ void RocketmanSynth::midiMessage(uint8_t data0, uint8_t data1, uint8_t data2) {
 }
 
 void RocketmanSynth::noteOn(int note, int velocity) {
-    float frequency = 440.f * std::exp2(float(note - 69) / 12.f);
+    float frequency = 440.f * std::exp2((float)(note - 69 + globalTranspose) / 12.f);
     voice.osc_common->amplitude = (velocity / 127.f) * 0.5f;
     voice.osc_common->inc = frequency / sampleRate;
     voice.osc_common->frequency = frequency;
@@ -80,5 +75,7 @@ void RocketmanSynth::noteOn(int note, int velocity) {
 
 void RocketmanSynth::noteOff(int note) {
     //Set a release or something, god damn.
-    voice.note = 0;
+    if (voice.note == note) {
+        voice.release();
+    }
 }

@@ -22,6 +22,7 @@ class Oscillator {
         float frequency;
         float sampleIndex;
         int waveIndex;
+        struct oscillator_Common* osc_common;
         WaveBase* waveArray[NUMWAVEPOS] = {&sineWave, &triangleWave, &sawWave, &squareWave};
         void reset() {
             //Initialise DFDR
@@ -46,7 +47,7 @@ class Oscillator {
             }
         }
         float update() {
-           return waveArray[waveIndex]->update(); 
+           return waveArray[waveIndex]->update();
         }
     private:
         DFDROscillator sineWave;

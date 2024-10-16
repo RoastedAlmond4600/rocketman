@@ -13,6 +13,11 @@ namespace ParameterID {
     PARAMETER_ID(osc1Vol);
     PARAMETER_ID(osc2Vol);
     PARAMETER_ID(osc3Vol);
+    //Oscillator Transpose
+    PARAMETER_ID(globalTrans);
+    PARAMETER_ID(osc1Trans);
+    PARAMETER_ID(osc2Trans);
+    PARAMETER_ID(osc3Trans);
     #undef PARAMETER_ID
 }
 
@@ -71,11 +76,16 @@ private:
     void valueTreePropertyChanged(juce::ValueTree&, const juce::Identifier&) {
         parameterChanged.store(true);
     }
-    juce::AudioParameterInt* oscPos1Param;
-    juce::AudioParameterInt* oscPos2Param;
-    juce::AudioParameterInt* oscPos3Param;
+    juce::AudioParameterInt* osc1PosParam;
+    juce::AudioParameterInt* osc2PosParam;
+    juce::AudioParameterInt* osc3PosParam;
     //Oscilalotor Volume Parameters
-    juce::AudioParameterFloat* oscVol1Param;
-    juce::AudioParameterFloat* oscVol2Param;
-    juce::AudioParameterFloat* oscVol3Param;
+    juce::AudioParameterFloat* osc1VolParam;
+    juce::AudioParameterFloat* osc2VolParam;
+    juce::AudioParameterFloat* osc3VolParam;
+    //Oscillator Transport Parameters
+    juce::AudioParameterFloat* globalTransParam;
+    juce::AudioParameterFloat* osc1TransParam;
+    juce::AudioParameterFloat* osc2TransParam;
+    juce::AudioParameterFloat* osc3TransParam;
 };
