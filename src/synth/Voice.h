@@ -13,6 +13,10 @@ struct Voice {
     Oscillator oscArray[3];
     Voice() {
         osc_common = (struct oscillator_Common*)malloc(sizeof(struct oscillator_Common));
+        osc_common->amplitude = 0.f;
+        osc_common->inc = 0.f;
+        osc_common->frequency = 0.f;
+        osc_common->sampleRate = 0.f;
     }
     void reset() {
         note = 0;
@@ -26,7 +30,7 @@ struct Voice {
             oscArray[i].reset();
         }
     }
-    float renderOsc() {
+    float renderOsc(float inc_factor) {
         float output = 0.f;
         float envelope = env.nextValue();
         for (unsigned int i = 0; i < NUMOSC; ++i) {

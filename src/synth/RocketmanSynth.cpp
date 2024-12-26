@@ -27,7 +27,13 @@ void RocketmanSynth::render(float** buffer, int sampleCount) {
         if (voice.note > 0) {
             //If the oscillator value changes, update the oscillator
             updateOsc();
-            float oscValue = voice.renderOsc();
+            float oscValue;
+            if (globalTranspose) {
+                oscValue = voice.renderOsc(globalTranspose);
+            }
+            else {
+                oscValue = voice.renderOsc(1.f);
+            }
             outputLeft = oscValue;
             outputRight = oscValue;
             if (rightBuffer != nullptr) {
@@ -67,6 +73,7 @@ void RocketmanSynth::noteOn(int note, int velocity) {
     float frequency = 440.f * std::exp2((float)(note - 69 + globalTranspose) / 12.f);
     voice.osc_common->amplitude = (velocity / 127.f) * 0.5f;
     voice.osc_common->inc = frequency / sampleRate;
+    std::printf("note_on increment: %f\n", voice.osc_common->inc);
     voice.osc_common->frequency = frequency;
     voice.osc_common->sampleRate = sampleRate;
     voice.reset(); 
@@ -74,7 +81,7 @@ void RocketmanSynth::noteOn(int note, int velocity) {
 }
 
 void RocketmanSynth::noteOff(int note) {
-    //Set a release or something, god damn.
+    //Set a release or something. 
     if (voice.note == note) {
         voice.reset();
         voice.release();

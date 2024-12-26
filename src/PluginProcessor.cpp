@@ -162,7 +162,6 @@ void AudioPluginAudioProcessor::update() {
     synth.osc3Volume = juce::Decibels::decibelsToGain(osc3VolParam->get());
     synth.osc1Transpose = osc1TransParam->get();
     synth.globalTranspose = globalTransParam->get();
-    //std::printf("%.2f\n", synth.osc1Volume);
 }
 
 void AudioPluginAudioProcessor::splitBufferEvents(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiBuffer) {
@@ -204,12 +203,12 @@ void AudioPluginAudioProcessor::render(juce::AudioBuffer<float>& buffer, int sam
 
 juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameterLayout() {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
-    layout.add(std::make_unique<juce::AudioParameterFloat>(
+    layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::globalTrans,
                     "Global Transpose",
-                    -12.f,
-                    12.f,
-                    0.f
+                    -12,
+                    12,
+                    0
                 ));
     layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::osc1Pos,
@@ -225,12 +224,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
                     6.f,
                     0.f
                 ));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(
+    layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::osc1Trans,
                     "Oscillator 1 Transpose",
-                    -12.f,
-                    12.f,
-                    0.f
+                    -12,
+                    12,
+                    0
                 ));
     layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::osc2Pos,
@@ -246,12 +245,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
                     6.f,
                     0.f
                 ));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(
+    layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::osc2Trans,
                     "Oscillator 2 Transpose",
-                    -12.f,
-                    12.f,
-                    0.f
+                    -12,
+                    12,
+                    0
                 ));
     layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::osc3Pos,
@@ -267,12 +266,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
                     6.f,
                     0.f
                 ));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(
+    layout.add(std::make_unique<juce::AudioParameterInt>(
                     ParameterID::osc3Trans,
                     "Oscillator 3 Transpose",
-                    -12.f,
-                    12.f,
-                    0.f
+                    -12,
+                    12,
+                    0
                 ));
     return layout;
 }

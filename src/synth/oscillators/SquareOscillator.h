@@ -1,5 +1,6 @@
 #pragma once
 #include "WaveBase.h"
+#include <iostream>
 class SquareOscillator : public WaveBase {
     public:
         float frequency;
@@ -16,6 +17,7 @@ class SquareOscillator : public WaveBase {
         }
         float update() override {
             phaseBL += inc; 
+            std::printf("square inc is %f\n", inc);
             if (phaseBL >= 1.f) {
                 phaseBL -= 1.f;
             }

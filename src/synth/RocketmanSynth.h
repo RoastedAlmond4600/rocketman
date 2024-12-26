@@ -13,7 +13,7 @@ public:
     void midiMessage(uint8_t data0, uint8_t data1, uint8_t data2);
 
     //Global Parameters
-    float globalTranspose;
+    int globalTranspose;
     //Volume Parameters
     float noiseMix;
     float oscMix;
@@ -55,16 +55,14 @@ private:
     //God awful
     Voice voice;
     const inline void updateOsc() {
+        //update index
         voice.oscArray[0].waveIndex = osc1Index;
         voice.oscArray[1].waveIndex = osc2Index;
         voice.oscArray[2].waveIndex = osc3Index;
+        //update volume (with attenutation factor)
         voice.oscArray[0].amplitude = osc1Volume * 0.707f;
         voice.oscArray[1].amplitude = osc2Volume * 0.707f;
         voice.oscArray[2].amplitude = osc3Volume * 0.707f;
-        float globalFactor = std::exp2(globalTranspose / 12.f);
-        voice.oscArray[0].frequency *= globalFactor;
-        voice.oscArray[1].frequency *= globalFactor;
-        voice.oscArray[2].frequency *= globalFactor;
     }
 };
 

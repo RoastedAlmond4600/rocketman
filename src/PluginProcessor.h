@@ -84,8 +84,8 @@ private:
     juce::AudioParameterFloat* osc2VolParam;
     juce::AudioParameterFloat* osc3VolParam;
     //Oscillator Transport Parameters
-    juce::AudioParameterFloat* globalTransParam;
-    juce::AudioParameterFloat* osc1TransParam;
-    juce::AudioParameterFloat* osc2TransParam;
-    juce::AudioParameterFloat* osc3TransParam;
+    juce::AudioParameterInt* globalTransParam;
+    juce::AudioParameterInt* osc1TransParam;
+    juce::AudioParameterInt* osc2TransParam;
+    juce::AudioParameterInt* osc3TransParam;
 };

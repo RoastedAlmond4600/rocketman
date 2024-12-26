@@ -47,7 +47,7 @@ class Oscillator {
             }
         }
         float update() {
-           return waveArray[waveIndex]->update();
+            return waveArray[waveIndex]->update();
         }
     private:
         DFDROscillator sineWave;
