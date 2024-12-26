@@ -76,6 +76,7 @@ void RocketmanSynth::noteOn(int note, int velocity) {
 void RocketmanSynth::noteOff(int note) {
     //Set a release or something, god damn.
     if (voice.note == note) {
+        voice.reset();
         voice.release();
     }
 }

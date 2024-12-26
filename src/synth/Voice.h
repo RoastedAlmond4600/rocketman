@@ -32,7 +32,8 @@ struct Voice {
         for (unsigned int i = 0; i < NUMOSC; ++i) {
             output += oscArray[i].update() * oscArray[i].amplitude;
         }
-        return output * envelope; 
+        //return output * envelope;
+        return output; 
     }
     void release() {
         env.release();
