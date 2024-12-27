@@ -18,6 +18,11 @@ namespace ParameterID {
     PARAMETER_ID(osc1Trans);
     PARAMETER_ID(osc2Trans);
     PARAMETER_ID(osc3Trans);
+    //Envelope Parameters
+    PARAMETER_ID(ampAttack);
+    PARAMETER_ID(ampDecay);
+    PARAMETER_ID(ampSustain);
+    PARAMETER_ID(ampRelease);
     #undef PARAMETER_ID
 }
 
@@ -88,4 +93,9 @@ private:
     juce::AudioParameterInt* osc1TransParam;
     juce::AudioParameterInt* osc2TransParam;
     juce::AudioParameterInt* osc3TransParam;
+    //Amp Envelope Parameters
+    juce::AudioParameterFloat* ampAttackParam;
+    juce::AudioParameterFloat* ampDecayParam;
+    juce::AudioParameterFloat* ampSustainParam;
+    juce::AudioParameterFloat* ampReleaseParam;
 };

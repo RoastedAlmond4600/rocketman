@@ -23,6 +23,10 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     castParameter(apvts, ParameterID::osc1Trans, osc1TransParam);
     castParameter(apvts, ParameterID::osc2Trans, osc2TransParam);
     castParameter(apvts, ParameterID::osc3Trans, osc3TransParam);
+    castParameter(apvts, ParameterID::ampAttack, ampAttackParam);
+    castParameter(apvts, ParameterID::ampDecay, ampDecayParam);
+    castParameter(apvts, ParameterID::ampSustain, ampSustainParam);
+    castParameter(apvts, ParameterID::ampRelease, ampReleaseParam);
     apvts.state.addListener(this);
 }
 
@@ -162,6 +166,17 @@ void AudioPluginAudioProcessor::update() {
     synth.osc3Volume = juce::Decibels::decibelsToGain(osc3VolParam->get());
     synth.osc1Transpose = osc1TransParam->get();
     synth.globalTranspose = globalTransParam->get();
+
+    float inverseSampleRate = 1.f / (float)getSampleRate();
+    synth.envAttack = std::exp(-inverseSampleRate * std::exp(5.5f - 0.075f * ampAttackParam->get()));
+    synth.envDecay = std::exp(-inverseSampleRate * std::exp(5.5f - 0.075f * ampDecayParam->get()));
+    synth.envSustain = ampSustainParam->get() * 0.01f;
+    if (ampReleaseParam->get() < 1.f) {
+        synth.envRelease = 0.75f;
+    }
+    else {
+        synth.envRelease = std::exp(-inverseSampleRate * std::exp(5.5f - 0.075f * ampReleaseParam->get())); 
+    }
 }
 
 void AudioPluginAudioProcessor::splitBufferEvents(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiBuffer) {
@@ -272,6 +287,30 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
                     -12,
                     12,
                     0
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::ampAttack,
+                    "Amp Attack",
+                    juce::NormalisableRange<float>(0.f, 100.f, 1.f),
+                    10.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::ampDecay,
+                    "Amp Decay",
+                    juce::NormalisableRange<float>(0.f, 100.f, 1.f),
+                    10.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::ampSustain,
+                    "Amp Sustain",
+                    juce::NormalisableRange<float>(0.f, 100.f, 1.f),
+                    10.f
+                ));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+                    ParameterID::ampRelease,
+                    "Amp Release",
+                    juce::NormalisableRange<float>(0.f, 100.f, 1.f),
+                    10.f
                 ));
     return layout;
 }

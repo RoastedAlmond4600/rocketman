@@ -19,7 +19,7 @@ struct Voice {
         osc_common->sampleRate = 0.f;
     }
     void reset() {
-        note = 0;
+        //note = 0;
         env.reset();
         //Set common values amongst the oscillators
         for (unsigned int i = 0; i < NUMOSC; ++i) {
@@ -30,14 +30,13 @@ struct Voice {
             oscArray[i].reset();
         }
     }
-    float renderOsc(float inc_factor) {
+    float renderOsc() {
         float output = 0.f;
         float envelope = env.nextValue();
         for (unsigned int i = 0; i < NUMOSC; ++i) {
             output += oscArray[i].update() * oscArray[i].amplitude;
         }
-        //return output * envelope;
-        return output; 
+        return output * envelope; 
     }
     void release() {
         env.release();

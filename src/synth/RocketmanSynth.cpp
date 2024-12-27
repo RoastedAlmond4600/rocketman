@@ -24,25 +24,23 @@ void RocketmanSynth::render(float** buffer, int sampleCount) {
     float outputRight = 0.0f;
     for (int sample = 0; sample < sampleCount; ++sample) {
         //If a voice is active.
-        if (voice.note > 0) {
+        if (voice.env.isActive()) {
             //If the oscillator value changes, update the oscillator
             updateOsc();
-            float oscValue;
-            if (globalTranspose) {
-                oscValue = voice.renderOsc(globalTranspose);
-            }
-            else {
-                oscValue = voice.renderOsc(1.f);
-            }
+            float oscValue = voice.renderOsc();
             outputLeft = oscValue;
             outputRight = oscValue;
-            if (rightBuffer != nullptr) {
-                leftBuffer[sample] = outputLeft;
-                rightBuffer[sample] = outputRight;
-            }
-            else {
-                leftBuffer[sample] = (outputLeft + outputRight) * 0.5f;
-            }
+        }
+        if (rightBuffer != nullptr) {
+            leftBuffer[sample] = outputLeft;
+            rightBuffer[sample] = outputRight;
+        }
+        else {
+            leftBuffer[sample] = (outputLeft + outputRight) * 0.5f;
+        }
+
+        if (!voice.env.isActive()) {
+            voice.env.reset();
         }
         //protectEars(leftBuffer, sampleCount);
         //protectEars(rightBuffer, sampleCount);
@@ -73,17 +71,22 @@ void RocketmanSynth::noteOn(int note, int velocity) {
     float frequency = 440.f * std::exp2((float)(note - 69 + globalTranspose) / 12.f);
     voice.osc_common->amplitude = (velocity / 127.f) * 0.5f;
     voice.osc_common->inc = frequency / sampleRate;
-    std::printf("note_on increment: %f\n", voice.osc_common->inc);
     voice.osc_common->frequency = frequency;
     voice.osc_common->sampleRate = sampleRate;
-    voice.reset(); 
     voice.note = note;
+    voice.reset();
+    //Begin attack stage of envelope
+    Envelope& env = voice.env;
+    env.attackMult = envAttack;
+    env.decayMult = envDecay;
+    env.sustainMult = envSustain;
+    env.releaseMult = envRelease;
+    env.attack();
 }
 
 void RocketmanSynth::noteOff(int note) {
     //Set a release or something. 
     if (voice.note == note) {
-        voice.reset();
         voice.release();
     }
 }

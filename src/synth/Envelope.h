@@ -2,19 +2,19 @@
 const float SILENCE = 0.0001f;
 class Envelope {
 public:
+    void reset() {
+        level = 0.0f;
+        target = 0.0f;
+        alpha = 0.0f;
+    }
     float nextValue() {
-        //Cheeky first order lpf.
+        //first order lpf.
         level = alpha * (level - target) + target;
-        if (target + level >= 3.0f) {
+        if (target + level > 3.0f) {
             alpha = decayMult;
             target = sustainMult;
         }
         return level;
-    }
-    float reset() {
-        level = 0.0f;
-        target = 0.0f;
-        alpha = 0.0f;
     }
     void release() {
         target = 0.0f;
